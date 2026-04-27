@@ -1,0 +1,610 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>鸡兔同笼 · 互动学堂 | 口诀前置放大版</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none; /* 避免拖动文字干扰，PPT中展示更干净 */
+        }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #e0f0de 0%, #c8e0c5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            margin: 0;
+        }
+        /* 针对PPT嵌入缩放友好，卡片宽度自适应 */
+        .main-card {
+            max-width: 750px;
+            width: 100%;
+            background: #fffff2;
+            border-radius: 56px 48px 56px 48px;
+            box-shadow: 0 20px 35px rgba(30, 50, 10, 0.25);
+            padding: 18px 22px 28px;
+            transition: all 0.2s;
+            border: 1px solid #bcddae;
+            margin: 5px auto;
+        }
+        @media (max-width: 550px) {
+            .main-card { padding: 12px 16px 20px; }
+            .slider-group label { font-size: 13px; }
+            .slider-value { font-size: 1.1rem; }
+            .correct-banner { font-size: 0.95rem; padding: 8px; }
+            .btn { padding: 6px 12px; font-size: 0.8rem; }
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #2b5e2b, #5a9e4e);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin: 0 0 4px 0;
+        }
+        .sub {
+            color: #4a6741;
+            font-weight: 500;
+            border-bottom: 2px dashed #9bc181;
+            display: inline-block;
+            padding-bottom: 3px;
+            font-size: 0.85rem;
+        }
+        .question-panel {
+            background: #fef7e0;
+            border-radius: 40px;
+            padding: 12px 16px;
+            margin: 8px 0 12px;
+            text-align: center;
+            box-shadow: inset 0 1px 3px #0001, 0 6px 10px rgba(0,0,0,0.05);
+        }
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d4a1e;
+            background: #fff3cf;
+            display: inline-block;
+            padding: 4px 20px;
+            border-radius: 48px;
+            margin: 4px 0;
+        }
+        .badge {
+            background: #4caf50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 60px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+            margin: 2px;
+        }
+        .slider-container {
+            background: #fafaf0;
+            border-radius: 32px;
+            padding: 16px 18px 12px;
+            margin: 10px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .slider-group {
+            margin-bottom: 22px;
+        }
+        .slider-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .slider-group .icon {
+            font-size: 1.4rem;
+        }
+        .slider-value {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: #e9f5e3;
+            padding: 2px 12px;
+            border-radius: 40px;
+            min-width: 60px;
+            display: inline-block;
+            text-align: center;
+        }
+        input[type=range] {
+            width: 100%;
+            height: 6px;
+            -webkit-appearance: none;
+            background: #d4e2cc;
+            border-radius: 10px;
+            outline: none;
+            margin: 8px 0;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4caf50;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            border: 2px solid white;
+        }
+        input[type=range]::-webkit-slider-thumb:hover { background: #2e7d32; }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            background: #eef3e6;
+            padding: 8px 16px;
+            border-radius: 40px;
+            margin: 12px 0 4px;
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+        .feet-highlight {
+            background: #ffecb3;
+            padding: 2px 12px;
+            border-radius: 50px;
+        }
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 14px 0 8px;
+        }
+        .btn {
+            border: none;
+            background: #eef3ea;
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            color: #2c5e2c;
+            border: 1px solid #caddbc;
+        }
+        .btn-primary {
+            background: #4caf50;
+            color: white;
+            border: none;
+        }
+        .btn-primary:hover { background: #3e8e41; transform: scale(0.97);}
+        .btn-warning {
+            background: #ffa726;
+            color: #2d2b1f;
+        }
+        .btn-warning:hover { background: #fb8c00; }
+        .btn:hover { transform: translateY(-1px); }
+        .btn:active { transform: translateY(1px); }
+
+        /* 成功横幅 - 位于口诀前面 */
+        .correct-banner {
+            margin: 8px 0 10px 0;
+            background: #ccffc7;
+            border-radius: 48px;
+            padding: 8px 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #1f5a1f;
+            display: none;
+            border: 1px solid #6fbf4c;
+            box-shadow: 0 2px 8px rgba(100,150,50,0.2);
+            animation: gentlePulse 0.4s ease;
+        }
+        @keyframes gentlePulse {
+            0% { transform: scale(0.98); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .thinking-box {
+            background: #ecf5e6;
+            border-left: 6px solid #6fbf4c;
+            border-radius: 28px;
+            padding: 10px 16px;
+            margin: 8px 0 10px;
+            font-family: 'Courier New', 'Fira Code', monospace;
+            font-size: 0.85rem;
+        }
+        .thinking-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
+            color: #2c6b2f;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        /* 放大显示口诀的样式 */
+        .big-mantra {
+            background: #fff9e0;
+            border-radius: 24px;
+            padding: 12px 18px;
+            margin-bottom: 18px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #b45f1b;
+            line-height: 1.4;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            border: 1px solid #ffdfaa;
+            font-family: 'Segoe UI', '楷体', 'Microsoft YaHei', cursive;
+        }
+        @media (max-width: 550px) {
+            .big-mantra { font-size: 1.1rem; padding: 8px 12px; }
+        }
+        .formula-steps {
+            background: #fffef7;
+            padding: 8px 12px;
+            border-radius: 20px;
+            line-height: 1.45;
+            color: #1f3d1a;
+            font-size: 0.82rem;
+        }
+        footer {
+            font-size: 0.65rem;
+            text-align: center;
+            color: #6c8662;
+            margin-top: 14px;
+        }
+        hr { margin: 6px 0; border-color: #cbe5bc; }
+        .random-area { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+        .voice-badge {
+            background: #f0f0e0;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            display: inline-block;
+            padding: 2px 8px;
+            margin-left: 6px;
+            color: #5a7352;
+        }
+        /* 让所有控件在PPT内嵌Web浏览器中可点且稳定 */
+        button, input[type=range] {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="main-card">
+    <div class="header">
+        <h1>🐔🐇 鸡兔同笼 · 智慧学堂</h1>
+        <div class="sub">独立滑条调节 | 口诀推导 | 正确语音鼓励</div>
+    </div>
+    <!-- 题目展示区 -->
+    <div class="question-panel">
+        <span class="badge">📐 当前挑战</span>
+        <div class="question-text" id="questionDesc">笼子里有8个头，26只脚</div>
+        <div class="random-area">
+            <button id="randomQuestionBtn" class="btn btn-primary">🎲 随机出题</button>
+            <button id="resetToClassicBtn" class="btn">⭐ 经典(8头26脚)</button>
+        </div>
+        <div style="font-size: 11px; margin-top: 6px;">
+            ✨ 拖动滑条独立调整鸡/兔数量，总头数固定不变，答对播放语音 <span class="voice-badge">🔊 “真棒，答案正确”</span>
+        </div>
+    </div>
+
+    <!-- 独立滑动条区域 -->
+    <div class="slider-container">
+        <div class="slider-group">
+            <label>
+                <span class="icon">🐔</span> 鸡的数量
+                <span class="slider-value" id="chickenValueLabel">8</span>
+            </label>
+            <input type="range" id="chickenSlider" min="0" max="20" step="1" value="8">
+        </div>
+        <div class="slider-group">
+            <label>
+                <span class="icon">🐇</span> 兔的数量
+                <span class="slider-value" id="rabbitValueLabel">0</span>
+            </label>
+            <input type="range" id="rabbitSlider" min="0" max="20" step="1" value="0">
+        </div>
+        <div class="info-row">
+            <span>📌 总头数 (鸡+兔) : <strong id="totalHeadsDisplay">8</strong></span>
+            <span>🦶 当前总脚数 : <strong id="totalFeetDisplay" class="feet-highlight">16</strong></span>
+        </div>
+    </div>
+
+    <div class="btn-group">
+        <button id="resetSlidersBtn" class="btn btn-warning">🔄 重置为全鸡</button>
+        <button id="matchAnswerBtn" class="btn">✨ 一键匹配答案</button>
+    </div>
+
+    <!-- 正确提示横幅：位于口诀推导过程的前面 -->
+    <div id="correctBanner" class="correct-banner">
+        ✅ 完全正确！当前鸡兔数量符合题意 🎉
+    </div>
+
+    <!-- 口诀推导区块 -->
+    <div class="thinking-box">
+        <div class="thinking-title">🧠 口诀·假设法推导过程</div>
+        <!-- 放大放前的经典口诀，符合要求 -->
+        <div class="big-mantra">
+            📖 口诀：“假设全是鸡，脚差除以二，得数即是兔，头数减兔得鸡数。”
+        </div>
+        <div id="formulaSteps" class="formula-steps">
+            💡 拖动滑条或随机出题，自动展示“假设全是鸡”的解题步骤～
+        </div>
+    </div>
+    <footer>🎓 依据口诀思路：脚差÷2 = 兔数，头数−兔数 = 鸡数。答对自动语音鼓励“真棒，答案正确”！</footer>
+</div>
+
+<script>
+    // ---------- DOM 元素 ----------
+    const questionDescSpan = document.getElementById('questionDesc');
+    const chickenSlider = document.getElementById('chickenSlider');
+    const rabbitSlider = document.getElementById('rabbitSlider');
+    const chickenValueLabel = document.getElementById('chickenValueLabel');
+    const rabbitValueLabel = document.getElementById('rabbitValueLabel');
+    const totalHeadsSpan = document.getElementById('totalHeadsDisplay');
+    const totalFeetSpan = document.getElementById('totalFeetDisplay');
+    const formulaStepsDiv = document.getElementById('formulaSteps');
+    const correctBanner = document.getElementById('correctBanner');   // 成功横幅（口诀前面）
+
+    const randomQuestionBtn = document.getElementById('randomQuestionBtn');
+    const resetToClassicBtn = document.getElementById('resetToClassicBtn');
+    const resetSlidersBtn = document.getElementById('resetSlidersBtn');
+    const matchAnswerBtn = document.getElementById('matchAnswerBtn');
+
+    // ---------- 全局题目参数 ----------
+    let currentHeads = 8;        
+    let currentTargetFeet = 26;  
+
+    // 当前鸡兔数量 (满足 chicken + rabbit = currentHeads)
+    let currentChicken = 8;
+    let currentRabbit = 0;
+
+    // 正确状态标记（用于触发语音）
+    let wasCorrect = false;
+
+    // 语音防抖标记（避免短时间内重复播报）
+    let voiceTimer = null;
+
+    // ---------- 播放语音 “真棒，答案正确”，音量始终稳定 ----------
+    function playCorrectVoice() {
+        if (!window.speechSynthesis) {
+            console.warn("浏览器不支持语音合成");
+            return;
+        }
+        // 如果有堆积的语音，先取消（避免重叠）
+        if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+            window.speechSynthesis.cancel();
+        }
+        // 创建语音实例
+        const utterance = new SpeechSynthesisUtterance("真棒，答案正确");
+        utterance.lang = "zh-CN";
+        utterance.rate = 0.92;      // 清晰友好语速
+        utterance.pitch = 1.08;     // 轻微上扬积极
+        utterance.volume = 1;       // 最大恒定音量
+
+        utterance.onerror = (e) => {
+            console.warn("语音出错", e);
+        };
+        window.speechSynthesis.speak(utterance);
+    }
+
+    // 触发正确语音 (带防抖，避免连续调节滑块时疯狂播放)
+    function triggerSuccessVoice() {
+        if (voiceTimer) clearTimeout(voiceTimer);
+        voiceTimer = setTimeout(() => {
+            playCorrectVoice();
+            voiceTimer = null;
+        }, 50);  // 短时防抖，确保仅从错误变为正确时播放一次
+    }
+
+    // 辅助: 更新整个UI (滑条、数值、总脚数、正确性验证、口诀推导 + 正确横幅展示 + 语音触发)
+    function updateAllFromState() {
+        // 数据一致性修正
+        let total = currentChicken + currentRabbit;
+        if (total !== currentHeads) {
+            if (currentChicken > currentHeads) currentChicken = currentHeads;
+            currentRabbit = currentHeads - currentChicken;
+        }
+        if (currentChicken < 0) currentChicken = 0;
+        if (currentRabbit < 0) currentRabbit = 0;
+        if (currentChicken + currentRabbit !== currentHeads) {
+            currentRabbit = currentHeads - currentChicken;
+            if (currentRabbit < 0) { currentRabbit = 0; currentChicken = currentHeads; }
+        }
+
+        chickenSlider.value = currentChicken;
+        rabbitSlider.value = currentRabbit;
+        chickenValueLabel.innerText = currentChicken;
+        rabbitValueLabel.innerText = currentRabbit;
+
+        const totalFeet = currentChicken * 2 + currentRabbit * 4;
+        totalHeadsSpan.innerText = currentHeads;
+        totalFeetSpan.innerText = totalFeet;
+
+        const isCorrectNow = (totalFeet === currentTargetFeet);
+
+        // 正确横幅显示/隐藏
+        if (isCorrectNow) {
+            correctBanner.style.display = 'block';
+            // 状态从未正确变为正确 → 播放语音
+            if (!wasCorrect) {
+                triggerSuccessVoice();
+            }
+        } else {
+            correctBanner.style.display = 'none';
+        }
+        wasCorrect = isCorrectNow;
+
+        // 更新口诀推导模块 (下方详细步骤)
+        updateFormulaExplanation();
+    }
+
+    // 根据当前题目条件及当前鸡兔状态，展示假设法推导 (完美匹配经典口诀)
+    function updateFormulaExplanation() {
+        const heads = currentHeads;
+        const targetFeet = currentTargetFeet;
+        const validRange = (targetFeet >= heads * 2 && targetFeet <= heads * 4 && targetFeet % 2 === 0);
+        let theoreticalChickens = 0, theoreticalRabbits = 0;
+        let isValid = true;
+        let errorMsg = "";
+
+        if (!validRange) {
+            isValid = false;
+            if (targetFeet < heads * 2) errorMsg = `⚠️ 脚数${targetFeet} < 最少${heads*2}只脚，无效题目。请重新出题。`;
+            else if (targetFeet > heads * 4) errorMsg = `⚠️ 脚数${targetFeet} > 最多${heads*4}只脚，无效题目。`;
+            else if (targetFeet % 2 !== 0) errorMsg = `⚠️ 脚数必须是偶数，当前${targetFeet}不合理。`;
+            else errorMsg = `⚠️ 题目数据异常无法计算整数解。`;
+        } else {
+            const allChickenFeet = heads * 2;
+            const diffFeet = targetFeet - allChickenFeet;
+            theoreticalRabbits = diffFeet / 2;
+            theoreticalChickens = heads - theoreticalRabbits;
+            if (theoreticalRabbits < 0 || theoreticalChickens < 0 || !Number.isInteger(theoreticalRabbits)) {
+                isValid = false;
+                errorMsg = "⚠️ 假设法无法得到非负整数解，请重新出题。";
+            }
+        }
+
+        let htmlContent = "";
+        if (!isValid) {
+            htmlContent = `<div style="color:#c0392b;">❌ ${errorMsg}<br>📌 点击【随机出题】或【经典例题】获取有效题目。</div>`;
+        } else {
+            const allChickenFeet = heads * 2;
+            const diffFeet = targetFeet - allChickenFeet;
+            // 在详细推导中增加对放大版口诀的直观呼应 (保持步骤清晰)
+            htmlContent = `
+                <div style="margin-bottom: 5px;">📐 <strong>题目：</strong> 头数 = ${heads}，总脚数 = ${targetFeet}</div>
+                <div>🔍 <strong>口诀应用·假设全是鸡</strong></div>
+                <div>❶ 假设全是鸡 → 应有脚数 = ${heads} × 2 = ${heads*2} 只</div>
+                <div>❷ 实际相差脚数（脚差） = ${targetFeet} − ${heads*2} = ${diffFeet} 只</div>
+                <div>❸ 脚差 ÷ 2 = ${diffFeet} ÷ 2 = <strong>${theoreticalRabbits}只 → 兔的数量</strong></div>
+                <div>❹ 头数 − 兔数 = ${heads} − ${theoreticalRabbits} = <strong>${theoreticalChickens}只 → 鸡的数量</strong></div>
+                <div>📌 验证: ${theoreticalChickens}×2 + ${theoreticalRabbits}×4 = ${theoreticalChickens*2 + theoreticalRabbits*4} ✔️</div>
+                <hr style="margin:8px 0;">
+                <div>🎛️ <strong>当前滑条选择：</strong> 鸡 ${currentChicken} 只 , 兔 ${currentRabbit} 只 → 脚数 ${currentChicken*2 + currentRabbit*4}</div>
+                <div>🎯 <strong>正确答案：</strong> 鸡 ${theoreticalChickens} 只 , 兔 ${theoreticalRabbits} 只</div>
+                ${ (currentChicken === theoreticalChickens && currentRabbit === theoreticalRabbits && (currentChicken*2+currentRabbit*4) === targetFeet) ? 
+                    '<div style="color:#2e7d32; background:#e1f5e8; padding:5px; border-radius:18px; margin-top:6px;">🌟 匹配成功！口诀验证通过 🌟</div>' : 
+                    '<div style="color:#bf6f00; margin-top:6px;">💡 拖动滑条，让鸡兔数量与答案一致~</div>'
+                }
+            `;
+        }
+        formulaStepsDiv.innerHTML = htmlContent;
+    }
+
+    // 鸡数量变化
+    function onChickenChange(value) {
+        let newChicken = parseInt(value, 10);
+        if (isNaN(newChicken)) newChicken = 0;
+        newChicken = Math.min(Math.max(0, newChicken), currentHeads);
+        currentChicken = newChicken;
+        currentRabbit = currentHeads - currentChicken;
+        if (currentRabbit < 0) currentRabbit = 0;
+        if (currentChicken + currentRabbit !== currentHeads) currentRabbit = currentHeads - currentChicken;
+        updateAllFromState();
+    }
+
+    function onRabbitChange(value) {
+        let newRabbit = parseInt(value, 10);
+        if (isNaN(newRabbit)) newRabbit = 0;
+        newRabbit = Math.min(Math.max(0, newRabbit), currentHeads);
+        currentRabbit = newRabbit;
+        currentChicken = currentHeads - currentRabbit;
+        if (currentChicken < 0) currentChicken = 0;
+        if (currentChicken + currentRabbit !== currentHeads) currentChicken = currentHeads - currentRabbit;
+        updateAllFromState();
+    }
+
+    function resetToAllChicken() {
+        currentChicken = currentHeads;
+        currentRabbit = 0;
+        updateAllFromState();
+    }
+
+    function matchAnswer() {
+        const heads = currentHeads;
+        const targetFeet = currentTargetFeet;
+        if (targetFeet < heads*2 || targetFeet > heads*4 || targetFeet % 2 !== 0) {
+            formulaStepsDiv.innerHTML = `<div style="color:#c0392b;">❌ 当前题目无整数解，无法自动匹配。请重新出题。</div>`;
+            return;
+        }
+        const allChickenFeet = heads * 2;
+        const diffFeet = targetFeet - allChickenFeet;
+        let theoryRabbits = diffFeet / 2;
+        let theoryChickens = heads - theoryRabbits;
+        if (theoryRabbits < 0 || theoryChickens < 0 || !Number.isInteger(theoryRabbits)) {
+            formulaStepsDiv.innerHTML = `<div style="color:#c0392b;">❌ 无法匹配: 题目无有效整数解，请点击随机出题。</div>`;
+            return;
+        }
+        currentChicken = theoryChickens;
+        currentRabbit = theoryRabbits;
+        updateAllFromState();
+    }
+
+    // 生成合法题目 (保证有整数解)
+    function generateRandomLegitQuestion() {
+        const minHeads = 3;
+        const maxHeads = 18;
+        const heads = Math.floor(Math.random() * (maxHeads - minHeads + 1) + minHeads);
+        const trueChicken = Math.floor(Math.random() * (heads + 1));
+        const trueRabbit = heads - trueChicken;
+        const feet = trueChicken * 2 + trueRabbit * 4;
+        return { heads, feet };
+    }
+
+    function setRandomQuestion() {
+        const { heads, feet } = generateRandomLegitQuestion();
+        currentHeads = heads;
+        currentTargetFeet = feet;
+        currentChicken = currentHeads;
+        currentRabbit = 0;
+        questionDescSpan.innerText = `笼子里有${currentHeads}个头，${currentTargetFeet}只脚`;
+        chickenSlider.max = currentHeads;
+        rabbitSlider.max = currentHeads;
+        wasCorrect = false;
+        updateAllFromState();
+    }
+
+    function setClassicQuestion() {
+        currentHeads = 8;
+        currentTargetFeet = 26;
+        currentChicken = 8;
+        currentRabbit = 0;
+        questionDescSpan.innerText = `笼子里有8个头，26只脚`;
+        chickenSlider.max = currentHeads;
+        rabbitSlider.max = currentHeads;
+        wasCorrect = false;
+        updateAllFromState();
+    }
+
+    // 事件绑定
+    chickenSlider.addEventListener('input', (e) => onChickenChange(e.target.value));
+    rabbitSlider.addEventListener('input', (e) => onRabbitChange(e.target.value));
+    resetSlidersBtn.addEventListener('click', () => resetToAllChicken());
+    matchAnswerBtn.addEventListener('click', () => matchAnswer());
+    randomQuestionBtn.addEventListener('click', () => setRandomQuestion());
+    resetToClassicBtn.addEventListener('click', () => setClassicQuestion());
+
+    // 初始化
+    function init() {
+        currentHeads = 8;
+        currentTargetFeet = 26;
+        currentChicken = 8;
+        currentRabbit = 0;
+        chickenSlider.max = currentHeads;
+        rabbitSlider.max = currentHeads;
+        questionDescSpan.innerText = `笼子里有8个头，26只脚`;
+        wasCorrect = false;
+        updateAllFromState();
+    }
+    init();
+</script>
+</body>
+</html>
+```
