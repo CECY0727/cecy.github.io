@@ -1,0 +1,605 @@
+以下是您所需的随机加减法练习器的HTML代码。它可生成混合加减法题目，并即时判断答案对错。
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>随机加减法练习器 | 算术小挑战</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none; /* 避免选择文本，提升按钮点击体验，但无伤大雅 */
+        }
+
+        body {
+            background: linear-gradient(145deg, #f6f9fc 0%, #eef2f5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', 'Roboto', 'Poppins', system-ui, -apple-system, 'Apple Color Emoji', 'Segoe UI Emoji', sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* 主卡片 */
+        .practice-card {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 64px 48px 64px 48px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(0px);
+            transition: all 0.2s ease;
+            overflow: hidden;
+            padding: 1.8rem 2rem 2.5rem;
+            border: 1px solid rgba(255,255,240,0.6);
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 0 0 0.25rem 0;
+            background: linear-gradient(135deg, #1E3C72, #2A5298);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .sub {
+            text-align: center;
+            color: #5a6e7c;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border-bottom: 2px dotted #cbdbe2;
+            display: inline-block;
+            width: auto;
+            margin: 0 auto 1.2rem;
+            padding-bottom: 6px;
+        }
+
+        /* 题目面板 */
+        .question-panel {
+            background: #ffffff;
+            border-radius: 48px;
+            padding: 1.2rem 1rem;
+            margin: 1.8rem 0 1rem;
+            box-shadow: inset 0 1px 4px #0001, 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e9edf2;
+        }
+
+        .big-equation {
+            font-size: 3.8rem;
+            font-weight: 800;
+            text-align: center;
+            font-family: 'Courier New', 'JetBrains Mono', monospace;
+            letter-spacing: 6px;
+            word-break: break-word;
+            color: #0a2b3e;
+            background: #fefce6;
+            padding: 0.6rem 0.2rem;
+            border-radius: 60px;
+            margin: 0 0 0.8rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .big-equation span {
+            display: inline-block;
+        }
+
+        .eq-number {
+            background: #f0f3f8;
+            padding: 0.2rem 0.5rem;
+            border-radius: 28px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .operator-symbol {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #e67e22;
+            margin: 0 4px;
+        }
+
+        .result-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: baseline;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 6px;
+        }
+
+        .result-area label {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e66;
+        }
+
+        #answerInput {
+            font-size: 1.8rem;
+            width: 140px;
+            text-align: center;
+            font-weight: 600;
+            font-family: monospace;
+            border: 2px solid #cfdfed;
+            border-radius: 50px;
+            padding: 10px 12px;
+            background: white;
+            transition: all 0.2s;
+            outline: none;
+            color: #1f3a4b;
+        }
+
+        #answerInput:focus {
+            border-color: #2a6d9c;
+            box-shadow: 0 0 0 3px rgba(42, 109, 156, 0.2);
+        }
+
+        /* 按钮组 */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin: 32px 0 18px;
+        }
+
+        .btn {
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 60px;
+            background: #edf2f7;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.2s, box-shadow 0.1s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #2c5f8a;
+            color: white;
+            box-shadow: 0 8px 18px -8px #1e4663;
+        }
+
+        .btn-primary:hover {
+            background: #1f4a6e;
+            transform: scale(1.02);
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #219150;
+            transform: scale(1.02);
+        }
+
+        .btn-warning {
+            background: #e67e22;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d35400;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #bdc3cf;
+            color: #2c3e66;
+        }
+
+        .btn-outline:hover {
+            background: #e9f0f5;
+            border-color: #7f8c8d;
+        }
+
+        /* 反馈 & 统计 */
+        .feedback {
+            background: #eef3fa;
+            border-radius: 40px;
+            padding: 12px 20px;
+            margin: 15px 0 10px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.2s;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            border-radius: 60px;
+            padding: 12px 20px;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #1e4663;
+            gap: 12px;
+            flex-wrap: wrap;
+            border: 1px solid #dbecfa;
+        }
+
+        .stat-item {
+            background: #f8fcff;
+            border-radius: 32px;
+            padding: 5px 16px;
+            flex: 1;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-left: 8px;
+            color: #e67e22;
+        }
+
+        hr {
+            margin: 20px 0 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #8aa0b0;
+            margin-top: 1.8rem;
+        }
+
+        @media (max-width: 500px) {
+            .practice-card {
+                padding: 1.2rem 1.2rem 1.8rem;
+            }
+            .big-equation {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+            .operator-symbol {
+                font-size: 2.5rem;
+            }
+            #answerInput {
+                font-size: 1.5rem;
+                width: 110px;
+            }
+            .btn {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="practice-card">
+    <h1>🧮 随机加减法练习器</h1>
+    <div style="text-align: center;">
+        <div class="sub">✔️ 混合加减 &nbsp;|&nbsp; 大脑热身</div>
+    </div>
+
+    <!-- 题目区域 -->
+    <div class="question-panel">
+        <div class="big-equation" id="questionText">
+            <span class="eq-number">12</span>
+            <span class="operator-symbol">+</span>
+            <span class="eq-number">8</span>
+            <span style="font-size:2.5rem;">&nbsp;=&nbsp;?</span>
+        </div>
+        <div class="result-area">
+            <label>📝 你的答案：</label>
+            <input type="number" id="answerInput" placeholder="?" inputmode="numeric" autocomplete="off">
+        </div>
+    </div>
+
+    <!-- 控制按钮组 -->
+    <div class="button-group">
+        <button class="btn btn-primary" id="checkBtn">✓ 验证答案</button>
+        <button class="btn btn-success" id="nextBtn">✨ 下一题</button>
+        <button class="btn btn-warning" id="newGameBtn">🔄 重置统计</button>
+    </div>
+
+    <!-- 反馈消息区域 -->
+    <div class="feedback" id="feedbackMsg">
+        💡 输入答案后点击「验证」，或者直接按「下一题」自动判题并跳转
+    </div>
+
+    <!-- 统计数据 -->
+    <div class="stats">
+        <div class="stat-item">📋 已答题: <span class="stat-value" id="totalCount">0</span></div>
+        <div class="stat-item">✅ 正确: <span class="stat-value" id="correctCount">0</span></div>
+        <div class="stat-item">📈 正确率: <span class="stat-value" id="accuracy">0</span><span style="font-size:1rem;">%</span></div>
+    </div>
+    <hr>
+    <footer>
+        ⚡ 随机生成 0~100 以内加法/减法 | 减法保证非负整数 (被减数 ≥ 减数)
+    </footer>
+</div>
+
+<script>
+    // ---------- 核心状态 ----------
+    let currentQuestion = {
+        operand1: 0,
+        operand2: 0,
+        operator: '+',   // '+' 或者 '-'
+        answer: 0
+    };
+    
+    // 统计
+    let totalAnswered = 0;      // 总共回答过的题目数量（每次验证正确/错误都会增加，避免重复计算同题目多次验证）
+    let correctAnswers = 0;     // 正确次数
+    
+    // 防止对同一题目多次验证累加统计(标记当前题目是否已经计分)
+    let currentQuestionScored = false;
+    
+    // DOM 元素
+    const questionTextDiv = document.getElementById('questionText');
+    const answerInput = document.getElementById('answerInput');
+    const checkBtn = document.getElementById('checkBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const newGameBtn = document.getElementById('newGameBtn');
+    const feedbackMsgDiv = document.getElementById('feedbackMsg');
+    const totalCountSpan = document.getElementById('totalCount');
+    const correctCountSpan = document.getElementById('correctCount');
+    const accuracySpan = document.getElementById('accuracy');
+    
+    // ---------- 辅助函数 ----------
+    function updateStatsUI() {
+        totalCountSpan.innerText = totalAnswered;
+        correctCountSpan.innerText = correctAnswers;
+        let accuracyRate = totalAnswered === 0 ? 0 : Math.round((correctAnswers / totalAnswered) * 100);
+        accuracySpan.innerText = accuracyRate;
+    }
+    
+    // 显示反馈信息 (带上样式情感)
+    function setFeedback(message, isError = false, isSuccess = false) {
+        feedbackMsgDiv.innerHTML = message;
+        feedbackMsgDiv.style.background = isError ? '#ffe6e5' : (isSuccess ? '#e1f7ea' : '#eef3fa');
+        feedbackMsgDiv.style.borderLeft = isError ? '5px solid #e74c3c' : (isSuccess ? '5px solid #2ecc71' : 'none');
+        setTimeout(() => {
+            if (feedbackMsgDiv.innerHTML === message) {
+                // 保留但不清空太多, 只是为了复位颜色？不必复位完全，下次setFeedback会覆盖
+            }
+        }, 1800);
+    }
+    
+    // 生成随机整数 min ~ max (包含)
+    function randomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    // 生成新的随机题目 (保证减法非负，加法范围0~100以内，和不超过100；减法结果 >=0)
+    function generateRandomQuestion() {
+        // 随机决定加减: 0 表示加法，1 表示减法
+        const isAddition = Math.random() < 0.5;
+        
+        if (isAddition) {
+            // 加法: 两个数相加不超过100，且每个数0~100
+            let operand1 = randomInt(0, 100);
+            let maxSecond = 100 - operand1;
+            let operand2 = randomInt(0, maxSecond);
+            let answer = operand1 + operand2;
+            return {
+                operand1: operand1,
+                operand2: operand2,
+                operator: '+',
+                answer: answer
+            };
+        } else {
+            // 减法: 被减数 >= 减数，结果 >=0，都在0~100之间
+            let operand1 = randomInt(0, 100);
+            let operand2 = randomInt(0, operand1);   // 保证 operand2 <= operand1
+            let answer = operand1 - operand2;
+            return {
+                operand1: operand1,
+                operand2: operand2,
+                operator: '-',
+                answer: answer
+            };
+        }
+    }
+    
+    // 刷新题目显示 (使用当前题目对象)
+    function renderCurrentQuestion() {
+        // 构造美观显示
+        const { operand1, operand2, operator } = currentQuestion;
+        // 清空并重新构建，避免xss，直接使用textContent安全，但我们用innerHTML可控
+        questionTextDiv.innerHTML = `
+            <span class="eq-number">${operand1}</span>
+            <span class="operator-symbol">${operator}</span>
+            <span class="eq-number">${operand2}</span>
+            <span style="font-size:2.2rem; margin-left:5px;">&nbsp;=&nbsp;?</span>
+        `;
+        // 重置输入框样式、清空值，专注但不清空统计相关flag
+        answerInput.value = '';
+        answerInput.focus();
+        // 重置当前题目是否已计分的标记 (因为题目更新了)
+        currentQuestionScored = false;
+    }
+    
+    // 刷新整个题目 (新随机)
+    function loadNewQuestion() {
+        currentQuestion = generateRandomQuestion();
+        renderCurrentQuestion();
+        // 可设置简单反馈提示刷新了题目，但不需要打扰
+        setFeedback(`✨ 新题目已生成，试试看！`, false, false);
+    }
+    
+    // 检查答案逻辑（可被手动验证调用，也可在点击下一题时自动验证当前答案再刷新）
+    // 参数: skipScore == true 表示不重复计分 (比如内部调用避免双重计分), 但正常情况下，我们会按需调用并仅在未计分时统计。
+    // 返回: boolean 是否正确
+    function validateCurrentAnswer() {
+        const userAnswerRaw = answerInput.value.trim();
+        if (userAnswerRaw === "") {
+            setFeedback("📛 在空白处输入数字答案吧~", true, false);
+            return false;
+        }
+        const userAnswer = Number(userAnswerRaw);
+        if (isNaN(userAnswer)) {
+            setFeedback("🔢 请输入有效数字！", true, false);
+            return false;
+        }
+        
+        const isCorrect = (userAnswer === currentQuestion.answer);
+        
+        // 关键: 如果当前题目还没有计分过(防止多次重复对同一题验证加分)
+        if (!currentQuestionScored) {
+            // 标记已经计分，并更新统计数据
+            currentQuestionScored = true;
+            totalAnswered++;
+            if (isCorrect) {
+                correctAnswers++;
+                setFeedback(`🎉 完全正确！ ${currentQuestion.operand1} ${currentQuestion.operator} ${currentQuestion.operand2} = ${currentQuestion.answer}`, false, true);
+            } else {
+                setFeedback(`❌ 哎呀不对！正确答案是 ${currentQuestion.answer}，继续加油～`, true, false);
+            }
+            updateStatsUI();
+        } else {
+            // 已经对本题计分过了，提醒不能再重复计分
+            if (isCorrect) {
+                setFeedback(`✅ 答案正确，但本题你已经答过了。点击「下一题」继续闯关吧！`, false, false);
+            } else {
+                setFeedback(`⚠️ 本题已经作答过了，正确答案是 ${currentQuestion.answer}。进入下一题挑战吧！`, true, false);
+            }
+        }
+        return isCorrect;
+    }
+    
+    // 下一题动作: 首先可自动验证当前未计分题目 (增强体验: 如果用户没点验证直接点下一题，则自动验证并计分)
+    // 但如果当前题目还没计分，我们就帮他「验证并计分」，然后切换到下一题
+    // 如果已经计分过了，直接切换到新题目
+    function handleNextQuestion() {
+        // 如果当前题目还未被计分 (说明用户还没有点验证按钮验证过)
+        if (!currentQuestionScored) {
+            // 先检查输入框是否有内容，没有内容给予提示，但不强制阻止？更人性化：给予警告并阻止跳转？
+            const rawAnswer = answerInput.value.trim();
+            if (rawAnswer === "") {
+                setFeedback("📢 请先填写答案，再继续下一题～", true, false);
+                answerInput.focus();
+                return;
+            }
+            // 主动验证并计分（调用验证，内部会依据 currentQuestionScored 标识增加统计）
+            validateCurrentAnswer();   // 调用后，将设置 scored 为 true，并更新统计
+            // 注意: 验证后未立即换题，需要继续生成新题目
+        }
+        // 不论是否计分，现在生成新题目并重置计分标记
+        loadNewQuestion();
+        // 输入框焦点
+        answerInput.focus();
+    }
+    
+    // 重置所有统计数据，但保留当前显示题目 (不清空题目，仅重置数字)
+    function resetStatistics() {
+        totalAnswered = 0;
+        correctAnswers = 0;
+        currentQuestionScored = false;   // 重置当前题目计分标记，因为统计重置后，应该允许重新对当前题目作答计分（但注意避免重置后对旧题目重新加分）
+        // 注意: 当前显示的题目仍然存在，重置后，用户再次验证应该基于新的统计进行计分，但不应因为之前验证过而跳过计分，但因为重置时我们把 currentQuestionScored 设为false
+        // 但是避免二次统计bug：已经重置了所有计数，需要将当前题目标记为未计分，那么再次点击验证会正常加统计。
+        // 同时也要保证统计UI刷新。
+        updateStatsUI();
+        setFeedback(`🗑️ 统计数据已重置！当前这道题可以重新作答并累计。`, false, false);
+        // 同时清空输入框的内容，让用户重新回答当前题目
+        answerInput.value = '';
+        // 为了使体验不混淆，重置统计时不清除反馈里的正确性提示，但把标记重置后，用户重新输入答案并点击验证会重新计分
+        // 并且我们也刷新一下反馈背景恢复正常
+        feedbackMsgDiv.style.background = '#eef3fa';
+        feedbackMsgDiv.style.borderLeft = 'none';
+        // 可额外刷新一下题目显示确保（无需改变题目内容）
+        // 如果希望题目也重置随机？（为了更好的重置感，但通常重置统计只重置计数，但也可以让产生新题？不，建议只重置数据）
+        // 但一些用户期望重置后立刻得到全新题目？针对加减法练习器，重置统计 可选题目也刷新一下更符合直觉? 为了更像“重置游戏”:
+        // 一般重置统计还会刷新题目避免重复用旧题，但为了防止混淆，提供两种模式：但遵循常规设计，重置统计的同时也刷新新题目，比较干净。
+        // 但是考虑到用户可能还没答完当前题目就想重置统计并开始全新练习，重置+新题更好，避免旧题目连续。
+        // 增强: 重置同时生成新题目会让体验重置后像全新开始。
+        // 为了符合绝大多数期待: 重置统计后立刻出一组新题目（避免继续回答旧题带旧统计影响）
+        // 因此执行重置后，再加载全新的题目:
+        currentQuestion = generateRandomQuestion();
+        renderCurrentQuestion();
+        // 确保当前计分标重置已经false (上面已经设)
+        updateStatsUI();
+        setFeedback(`✨ 统计已归零，且生成了全新题目！开始挑战吧 ✨`, false, true);
+    }
+    
+    // 键盘支持: 回车键触发验证啦，Ctrl/Cmd + Enter 下一题
+    function setupKeyboardEvents() {
+        answerInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // 回车默认验证答案
+                validateCurrentAnswer();
+            }
+        });
+        // 额外全局快捷键: 按下 "Ctrl+Enter" 或者 "Cmd+Enter" 下一题
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                handleNextQuestion();
+            }
+            // 可选: 按下 'n' 键快速下一题 (无修饰键时) 避免干扰输入框打字
+            if (e.key === 'n' && !e.ctrlKey && !e.metaKey && document.activeElement !== answerInput) {
+                e.preventDefault();
+                handleNextQuestion();
+            }
+            // 按下 'c' 快速验证 (当焦点不在输入框里可快速验证，但为了避免干扰，仅当不在输入框时）
+            if (e.key === 'c' && !e.ctrlKey && !e.metaKey && document.activeElement !== answerInput) {
+                e.preventDefault();
+                validateCurrentAnswer();
+            }
+        });
+    }
+    
+    // 初始化 或 重新启动 (首次加载)
+    function initGame() {
+        // 产生第一个随机题目
+        currentQuestion = generateRandomQuestion();
+        renderCurrentQuestion();
+        totalAnswered = 0;
+        correctAnswers = 0;
+        currentQuestionScored = false;
+        updateStatsUI();
+        setFeedback("💪 输入答案，点击【验证答案】或者直接回车！点击下一题自动保存本题答案~", false, false);
+        answerInput.focus();
+    }
+    
+    // 绑定按钮事件
+    function bindEvents() {
+        checkBtn.onclick = () => {
+            validateCurrentAnswer();
+        };
+        nextBtn.onclick = () => {
+            handleNextQuestion();
+        };
+        newGameBtn.onclick = () => {
+            resetStatistics();
+        };
+    }
+    
+    // 便捷调整移动端数字键盘；无需额外
+    (function start() {
+        bindEvents();
+        setupKeyboardEvents();
+        initGame();
+    })();
+</script>
+</body>
+</html>
+```
