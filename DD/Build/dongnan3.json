@@ -1,0 +1,10 @@
+{
+"TOTAL_MEMORY": 268435456,
+"dataUrl": "dongnan3.data.unityweb",
+"asmCodeUrl": "dongnan3.asm.code.unityweb",
+"asmMemoryUrl": "dongnan3.asm.memory.unityweb",
+"asmFrameworkUrl": "dongnan3.asm.framework.unityweb",
+"backgroundUrl": "dongnan3.png",
+"splashScreenStyle": "Dark",
+"backgroundColor": "#FFFFFF"
+}
